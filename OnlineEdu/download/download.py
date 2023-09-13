@@ -1,7 +1,9 @@
 import numpy as np
 import fasttext
-from utils import find_max_index
 import pandas as pd
+
+from ..utils import find_max_index
+
 
 def download_model(model_path):
     import urllib.request
@@ -94,17 +96,8 @@ for test_id in range(0,len(job_data)):
     cosine_max_number, cosine_max_index = find_max_index(cosine_list, 3)
    
     recom = [job_title[test_id]]
-#     print(job_title[test_id])
-#     print("matched programs:",end=' ')
     for item in cosine_max_index:
-#         print("university name:",school_name[item],end=' ')
-#         print("program name:", program_name[item])
         recom.append(school_name[item] + '/' + program_name[item])
-    
-#     best_score += 1
-#     if cluster_data_job[test_id]!=cluster_data_program[cosine_max_index]:
-        
-#         cosine_score += 1
     cosine_score+=3-len(set(cluster_data[cosine_max_index]))
     worst_score += 3
 
@@ -121,16 +114,3 @@ with open('rmd_program_fasttext_cosine.csv', 'w', newline='') as f:
     writer = csv.writer(f)
     writer.writerow(header)
     writer.writerows(rmd_result)
-
-
-
-
-
-
-# word_list1 = ["apple", "banana", "orange"]
-# word_list2 = ["fruit", "juice", "smoothie"]
-
-# model_path = "../checkpoints/cc.en.300.bin"
-
-# similarity = fasttext_similarity(word_list1, word_list2, model_path)
-# print(similarity)

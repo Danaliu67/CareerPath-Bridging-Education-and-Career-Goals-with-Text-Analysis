@@ -3,9 +3,8 @@ import time
 import string
 import streamlit as st
 
-from key_extractor import key_extractor
-from predict_job import Job_prediction
-from predict_program import Program_prediction
+from OnlineEdu.text import KeyExtractor
+from OnlineEdu.model import JobPrediction, ProgramPrediction
 
 
 def Title():
@@ -35,7 +34,7 @@ def Keywords(opt='Job'):
 		description = st.text_area('Please input a job description',
 									"Diverse role with close cooperation with the Managing Director and team.Fantastic team culture.Have oversight over a diverse range of accounts.")
 
-	key_etc = key_extractor()
+	key_etc = KeyExtractor()
 	keys = key_etc.get_key(description)
 
 	if st.button('Get keywords'):
@@ -52,26 +51,24 @@ def Keywords(opt='Job'):
 def Predict(opt, keys):
 	st.subheader('To do the recommendation')
 	if st.button('Get recommendation'):
-		if opt == 'Program':
+		if opt == 'Job':
 			with st.spinner('Wait for it...'):
-				predictor = Job_prediction()
+				predictor = JobPrediction()
 				result = predictor.predict(keys)
 				time.sleep(3)
-		    #st.success('Done!')
 			out_predict = 'The most recommended job is '+str(result[0])+',\n and '+str(result[1])+' and '+str(result[2])+' are also recommended'
 			st.success(out_predict)
 		else:
 			with st.spinner('Wait for it...'):
-				predictor = Program_prediction()
+				predictor = ProgramPrediction()
 				result = predictor.predict(keys)
 				time.sleep(3)
-		    #st.write('The recommand programs are:',predictor.predict(keys))
 			out_predict = 'The most recommended program is ' + str(result[0]) + ',\n and ' + str(result[1]) + ' and ' + str(result[2]) +' are also recommended'
 			st.success(out_predict)
 
 
-if __name__ == "main":
-	Title()
-	opt = Choose()
-	keys = Keywords(opt)
-	Predict(opt, keys)
+# if __name__ == "main":
+Title()
+opt = Choose()
+keys = Keywords(opt)
+Predict(opt, keys)

@@ -1,15 +1,8 @@
-"""
-calculate the similarity of different texts using key words
-distance methods include: cosine, jaccard, euclidean (not effective)
-"""
-
 import pandas as pd
 import numpy as np
-import utils
 import copy
-# from sklearn.feature_extraction.text import TfidfVectorizer
-# import math
-# import jieba
+
+
 def find_max_index(list_, max_num=3):
     t = copy.deepcopy(list_)
     max_number = []
@@ -79,16 +72,6 @@ def cal_similarity(bowA, bowB, type_ = 'cosine',v_type='BOW'):
             for word in text:
                 vector_list[word_index_dict[word]]+=1
             count_vector.append(vector_list)
-#     elif 'v_type'=='tfidf':
-#         vectorizer=TfidfVectorizer()
-#         vectorizer.fit([bowA,bowB])
-#         count_vector=vectorizer.transform([bowA,bowB])
-    # if(type_== 'cosine'):
-    #     return cosine(count_vector[0],count_vector[1])
-    # elif(type_ == 'euclidean'):
-    #     return Distance(count_vector[0],count_vector[1])
-    # else:
-    #     print("lack para")
     if(type_== 'cosine'):
         return cosine(count_vector[0],count_vector[1])
     elif(type_ == 'euclidean'):
@@ -105,7 +88,6 @@ program_file = 'keywords_program(2).xlsx'
 program_raw_data = pd.read_excel(program_file, header=0)  
 program_data = program_raw_data.values
 program_row = program_data[0][1:]
-# print(len(program_data))
 
 # to get job and program name
 # read job
@@ -117,13 +99,6 @@ df2 = pd.read_csv("program data_pre(ver2).csv")
 school_name = df2['Schoole']
 program_name = df2['program']
 
-# df3 = pd.read_csv("../../skill_classifier/clustered_data.csv") 
-# cluster_data = df3["cluster"].values
-# df_job = pd.read_csv("../../../eval/eval/clustered_data_job.csv") 
-# cluster_data_job = df_job["cluster"].values
-
-# df_program = pd.read_csv("../../../eval/eval/clustered_data_program.csv") 
-# cluster_data_program = df_program["cluster"].values
 df3 = pd.read_csv("../../../eval/eval/clustered_data.csv") 
 cluster_data = df3["cluster"].values
 rmd_result = []
@@ -132,16 +107,6 @@ jaccard_score = 0
 euclidean_score = 0
 best_score = 0
 worst_score = 0
-# print(newlist)
-
-# print(len(job_data))
-# for job in job_data:
-# for i in range(5):
-#     job = job_data[i]
-#     job = [x for x in job if pd.isnull(x) == False]
-#     print("cosine:",cal_similarity(newlist, job[1:]),end='\t')
-#     print('Jaccard:',Jaccard(newlist, job[1:]), end='\t')
-#     print('Euclidean distance:',cal_similarity(newlist, job[1:], type_='euclidean'))
 
 for test_id in range(0,len(job_data)):
 #     print(test_id)
@@ -158,24 +123,11 @@ for test_id in range(0,len(job_data)):
         cosine_list.append(cal_similarity(newlist, program))
 
     cosine_max_number, cosine_max_index = find_max_index(cosine_list, 3)
-#     cosine_max_index=cosine_list.index(max(cosine_list))
    
     recom = [job_title[test_id]]
-#     print(job_title[test_id])
-#     print("matched programs:",end=' ')
     for item in cosine_max_index:
-#     item=cosine_max_index
-#         print("university name:",school_name[item],end=' ')
-#         print("program name:", program_name[item])
         recom.append(school_name[item] + '/' + program_name[item])
-    
-#     best_score += 1
-#     if cluster_data_job[test_id]!=cluster_data_program[cosine_max_index]:
-        
-#         cosine_score += 1
     cosine_score += 3-len(set(cluster_data[cosine_max_index]))
-    # jaccard_score += 3 - len(set(jaccard_max_index))
-    # euclidean_score += 3 - len(set(euclidean_max_index))
     worst_score += 2
 
 

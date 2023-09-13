@@ -5,26 +5,14 @@ import pandas as pd
 import copy
 
 
-
-
-#     """
-#     使用BERT计算两个关键词列表的相似度
-#     :param keyword_list_1: 第一个关键词列表
-#     :param keyword_list_2: 第二个关键词列表
-#     :return: 两个关键词列表的相似度
-#     """
-# 加载预训练的BERT模型和tokenizer
 config=BertConfig.from_pretrained('bert-base-uncased')
 tokenizer = BertTokenizer.from_pretrained('bert-base-uncased')
 model = BertModel.from_pretrained('bert-base-uncased',config=config)
 
 
-
 def calc_bert_keyword_similarity(keyword_vectors_1, keyword_vectors_2):
-    # 计算两个关键词列表的余弦相似度
     sim = np.dot(keyword_vectors_1, keyword_vectors_2.T) / \
           (np.linalg.norm(keyword_vectors_1) * np.linalg.norm(keyword_vectors_2))
-#     print(sim)
     return sim
 
 
@@ -39,25 +27,18 @@ def find_max_index(list_, max_num=3):
         max_number.append(number)
         max_index.append(index)
     t = []
-    # print(max_number)
-    # print(max_index)
     if(0.0 in max_number):
         discard = []
         for i in range(len(max_number)):
             if max_number[i] == 0.0:
                 discard.append(max_index[i])
-
         max_number.remove(0.0)
         for item in discard:
             max_index.remove(item)
-
     return (max_number, max_index)
  
 
-    
 
-
-# read job
 file_path = 'keywords job(ver2).xls'   
 raw_data = pd.read_excel(file_path, header=0)  
 job_data = raw_data.values
@@ -94,12 +75,6 @@ program_vectors=[]
 for i in range(len((job_data))):
     row = job_data[i][1:]
     newlist = [x for x in row if pd.isnull(x) == False]
-        # 将关键词列表转换为Bert输入格式
-#     input_1 = torch.tensor([tokenizer.encode(' '.join(newlist), add_special_tokens=True)])
-#     with torch.no_grad():
-#         output_1 = model(input_1)[0]
-#         keyword_vectors_1 = torch.mean(output_1, dim=1).numpy()
-#         job_vectors.append(keyword_vectors_1)
     input_1=tokenizer(' '.join(newlist),return_tensors="pt")
     output_1=model(**input_1)
     keyword_vectors_1 = torch.mean(output_1.last_hidden_state, dim=1).detach().numpy()
@@ -109,14 +84,6 @@ for j in range(len(program_data)):
     row = program_data[j][1:]
     newlist = [x for x in row if pd.isnull(x) == False]
     input_2 = torch.tensor([tokenizer.encode(' '.join(newlist), add_special_tokens=True)])
-
-    # 使用BERT计算文本相似度
-#     with torch.no_grad():
-#         # 获取Bert输出的last_hidden_states
-#         output_2 = model(input_2)[0]
-#         # 对每个关键词取平均，得到关键词列表的表示
-#         keyword_vectors_2 = torch.mean(output_2, dim=1).numpy()
-#         program_vectors.append(keyword_vectors_2)
     input_2=tokenizer(' '.join(newlist),return_tensors="pt")
     output_2=model(**input_2)
     keyword_vectors_2 = torch.mean(output_2.last_hidden_state, dim=1).detach().numpy()
@@ -163,6 +130,3 @@ with open('rmd_program_bertc_cosine.csv', 'w', newline='') as f:
     writer = csv.writer(f)
     writer.writerow(header)
     writer.writerows(rmd_result)
-
-
-

@@ -3,6 +3,7 @@ import torch
 import numpy as np
 import pandas as pd
 import copy
+import csv
 
 
 config=RobertaConfig.from_pretrained('roberta-base')
@@ -10,12 +11,9 @@ tokenizer = RobertaTokenizer.from_pretrained('roberta-base')
 model = RobertaModel.from_pretrained('roberta-base',config=config)
 
 
-
 def calc_keyword_similarity(keyword_vectors_1, keyword_vectors_2):
-    # 计算两个关键词列表的余弦相似度
     sim = np.dot(keyword_vectors_1, keyword_vectors_2.T) / \
           (np.linalg.norm(keyword_vectors_1) * np.linalg.norm(keyword_vectors_2))
-#     print(sim)
     return sim
 
 
@@ -30,8 +28,6 @@ def find_max_index(list_, max_num=3):
         max_number.append(number)
         max_index.append(index)
     t = []
-    # print(max_number)
-    # print(max_index)
     if(0.0 in max_number):
         discard = []
         for i in range(len(max_number)):
@@ -98,17 +94,13 @@ for j in range(len(program_data)):
 similarity_mat=np.zeros((len(job_data),len(program_data)))
 
 for test_id in range(0,len(job_data)):
-    # print(job_data[test_id])
     row = job_data[test_id][1:]
     # newlist = [x if pd.isnull(x) == False else '<pad>' for x in row]
     newlist = [x for x in row if pd.isnull(x) == False]
-    # print(newlist)
-
     cosine_list = []
     jaccard_list = []
     euclidean_list = []
     for program_id in range(len(program_data)):
-        # print(program)
         program = program_data[program_id][1:]
         program = [x for x in program if pd.isnull(x) == False]
         similarity=calc_keyword_similarity(job_vectors[test_id], program_vectors[program_id])
@@ -131,24 +123,8 @@ for program_id in range(len(program_data)):
     for item in cosine_max_index:
         recom_job.append(job_title[item])
     rmd_job_result.append(recom_job)
-# for test_id in range(0,len(job_data)):
-#     cosine_list = []
-#     jaccard_list = []
-#     euclidean_list = []
-#     for program_id in range(len(program_data)):
-#         cosine_list.append(calc_bert_keyword_similarity(job_vectors[test_id], program_vectors[program_id]))
 
-#     cosine_max_number, cosine_max_index = find_max_index(cosine_list, 3)
-#     recom = [job_title[test_id]]
-#     for item in cosine_max_index:
-#         recom.append(school_name[item] + '/' + program_name[item])
-#     cosine_score += 3-len(set(cluster_data[cosine_max_index]))
-#     worst_score += 2
-#     rmd_result.append(recom)
-# print(cosine_score)
-# print(worst_score)
-# print(cosine_score/worst_score)
-import csv
+
 header1 = ['job title', 'recommand1', 'recommand2', 'recommand3']
 
 with open('rmd_program_roberta_cosine.csv', 'w', newline='') as f1:

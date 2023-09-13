@@ -1,0 +1,9 @@
+torch
+transformers
+nltk
+xlrd
+gensim
+fasttext
+scikit-learn
+matplotlib
+pandas
