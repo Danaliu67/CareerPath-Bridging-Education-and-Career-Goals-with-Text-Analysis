@@ -26,7 +26,7 @@ class key_extractor():
         # 计算TF-IDF值
         vectorizer = TfidfVectorizer(max_features=10)
         tfidf = vectorizer.fit_transform(words)
-        tfidf_scores = zip(vectorizer.get_feature_names(), tfidf.toarray()[0])
+        tfidf_scores = zip(vectorizer.get_feature_names_out(), tfidf.toarray()[0])
         tfidf_scores = sorted(tfidf_scores, key=lambda x: x[1], reverse=True)
 
         # 提取关键词
