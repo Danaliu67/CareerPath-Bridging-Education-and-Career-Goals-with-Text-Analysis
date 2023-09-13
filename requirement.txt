@@ -7,3 +7,4 @@ fasttext
 scikit-learn
 matplotlib
 pandas
+streamlit

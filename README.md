@@ -13,15 +13,25 @@ This project introduces a novel approach to bridge the gap between job requireme
 ## Setup and Execution
 
 1. Clone this repository to your local machine.
+
 2. Install the necessary dependencies and libraries.
+
+   ```shell
+   pip install -r requirement.txt
+   ```
+
 3. Run the main script to initiate the dashboard and recommendation system.
+
+   ```shell
+   bash run.sh
+   ```
 
 ## Dependencies and Libraries
 
+- PyTorch
+- Transformers
 - Streamlit
-- TF-IDF
-- RoBERTa
-- (List other libraries and dependencies here)
+- nltk
 
 ## Contribution and Feedback
 
@@ -29,11 +39,5 @@ Contributions and feedback from anyone interested in the project are welcome. Pl
 
 ## Authors and Contact
 
-- Author Name
-- Email
-- (Other contact details)
-
-## License or Legal Notice
-
-(Insert or link to your license here, if applicable)
-
+- Dana Liu
+- danaliu67@connect.hku.hk
